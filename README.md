@@ -26,7 +26,7 @@ From here, many things can be computed and assessed:
 
 ### pictures
 This folder contains images which where produced using the models (outcome, references and much more).
-
+They were all produced by me, using R and Python's plot functions.
 
 ### resources
 Notes, links and anything useful for these kind of scripts.
