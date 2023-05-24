@@ -1,9 +1,11 @@
-# Species Ditribution Models for Alps Data
-
+Species Ditribution Models for Alps Data <a name="TOP"></a>
+===================
 In this repository you will find some code revolving around producing statistical models aimed at understanding what are the most important factors to predict animal distribution; the code is free to download but beware that, due to the large amount of data used, it is not advised to reproduce without proper instrumentation.
 
-## Contents:
-### code
+# Contents:  #
+
+## code       ##
+
 the *code* folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
 Here, the *species_distribution_model_Script_V1.Rmd* file represents a first run of SDM applied to Capra Ibex; 
 the script is divided in sections, with the following steps being mandatory:
@@ -24,11 +26,16 @@ From here, many things can be computed and assessed:
 - **Ensemble Modeling**, joining all the results of the different algorithms to produce a more accurate prediction of distributions.
 - **Future Estimations**, if given the adequate settings concerning how the environment is expected to change.
 
-### pictures
+## pictures      ##
+
 This folder contains images which where produced using the models (outcome, references and much more).
 They were all produced by me, using R and Python's plot functions.
 
-### resources
+
+
+## resources     ##
+
 Notes, links and anything useful for these kind of scripts.
-#### sdm references
+  ### sdm references ###
+
 Here I uploaded all graphs, tables and diagrams found while documenting myself on SDMs, always quoting the source in the name in the format of (Surname, Year).
