@@ -1,0 +1,314 @@
+---
+title: "Species Distribution Models"
+subtitle: "_Capra ibex_ distribution analysis"
+output:
+html_notebook:
+highlight: zenburn
+theme: cosmo
+css: style.css
+toc: yes
+html_document:
+toc: yes
+toc_float: yes
+highlight: zenburn
+theme: cosmo
+css: style.css
+keep_md: yes
+df_print: kable
+editor_options:
+chunk_output_type: console
+markdown:
+wrap: 72
+---
+
+::: metadata
+Version 0.4\
+Created: 20230426 patrick\
+Updated: 20230525 patrick
+:::
+
+# Setup
+
+```{r setup, echo=FALSE, message=FALSE}
+library(raster)
+library(rgdal)
+library(biomod2)
+# library(sf) we don't need sp so far
+library(sp)
+library(rgeos)
+library(tidyverse)
+```
+
+::: comment
+Always name the first chunk `setup`, and make it quiet and silent. You're supposed to just load packages in the `setup`chunk.
+:::
+
+## Data paths
+
+Define where all the relevsant data sets are.
+
+```{r set paths}
+#wd <- getwd() # never, ever use `getwd()` or Hadley will come to you and cut your throat
+personally, the `wd` is where the RStudio project is
+EGV_Alps <- file.path("BASE","EGV Alps","EGV")
+ibex.DSN <- file.path("BASE","ibex")
+ibex.Layer <- "punti_2018"
+```
+
+## Load Environmental Data
+
+Load the cartographic data. Some layers aren't necessary for my project, so I drop them to save storage.
+
+```{r load data}
+EGV <- stack(EGV_Alps)
+```
+
+### Load species presence data
+
+24/05/23, 14:24 species_distribution · RStudio Server uagra.uninsubria.it:8788 2/6 Now I load the ibex data as A `SpatialPointsDataframe`. We have a total of 773 observations, with 14 fields each. We also need to turn the points reference system in `epsg:3035`.
+
+```{r load ibex data}
+ibex <- readOGR(ibex.DSN, ibex.Layer)
+ibex <- spTransform(ibex, CRS("+init=epsg:3035")) # same projection as the EGV raster
+```
+
+### Extent matching
+
+Next step: Plotting (see above) the EGV and ibex data together we see that the area occupied by the points is *smaller*. Best if we crop the raster to only consider the area containing ibex observation. Usually this is made taking into account not just the *bounding box* (i.e. the area exactly occupied by the points), but something slightly bigger: the standard procedure is - extract the bounding box from the points - enlarge it with a sensibly sized buffer (in this case 8-10 km should do) - get the bounding box from the buffered bounding box - crop Note that since the extent we get is *not* a spatial object anymore (is by chance of class `extent`), we simply add/subtract 10 km.
+
+```{r crop}
+extent <- extent(ibex)
+buf <- 10
+extent.b <- extent(matrix(c(extent[1]-buf,extent[3]+buf,extent[2]-buf,extent[4]+buf), nrow=2))
+#Since it is a matrix, each row corresponds to a dimension.
+EGV_cropped <- crop(EGV, extent.b)
+#extent(EGV2)
+#extent(EGV_cropped)
+```
+
+### Subset Selection
+
+We keep variables by name; this procedure changes based on which layer to consider for each model version.
+
+```{r}
+EGV_cropped <- subset(EGV_cropped, c("BIO_10", "BIO_11", "BIO_12",
+"BIO_13", "BIO_14", "BIO_15", "BIO_16", "BIO_17",
+"BIO_18",
+"BIO_19"))
+#"Elevation", "Slope.level", "Urban.areas", "Water.bodies", "Shrubland", "Natural.grasslands",
+"Seminatural.vegetation", #"Agriculture", "Moors.and.heathland", "Sparsely.vegetated.areas",
+"Bare.rocks", "Solar.Radiation", #"BIO_01")
+```
+
+To see if it's working i plot one of the layers.
+
+```{r plot}
+names(EGV_cropped)
+plot(EGV_cropped$BIO_10)
+```
+
+### Visualization
+
+Now, both the raster and the point should match when plotted: usually real men don't plot, they trust their `epsg` codes.
+
+```{r plot all}
+#point_ibex_sf <- read_sf(ibex, "punti_2018") # Just to visualize it
+#plot(point_ibex_sf)
+24/05/23, 14:24 species_distribution · RStudio Server
+uagra.uninsubria.it:8788 3/6
+plot(ibex, add=TRUE)
+```
+
+::: comment
+As we can see, observations have 14 different attributes. Apparently, it isn't necessary to turn the points into a raster, they just need to become a spatial unit compatible to packages like dismo or biomod.
+:::
+
+### Visualization
+
+```{r visualize}
+plot(EGV_cropped$BIO_10)
+points(ibex, pch=2, cex=0.5, col="brown")
+```
+
+:::comment Actually, the area of interest (`AOI` in GIS-speak) should be somewhat *bigger* than the actual area we're interested in. Mathematicians call them "boundary conditions", and we as mapmakers want the boundary to happen as far as possible from the real area we're interested in. \## Biodiversity Models - `biomod2` Now that we have our data it's time to start applying biodiversity models. \### Format Data First we need to specify all the important factors, variables and information to use. We also format the data using the appropriate function. For starting I set the number of Pseudo-Absence selection as 2 and strategy as random (four possible), With 200 absences for each (since we have a sample of 773 It's very close to 25% of the sample) Translation in modelese: The `biomod2` package offers some handy methods to run several models *unattended*. This means that one have to rely on `biomod2` toolchain even for trivial things such as preparing presence points and EGVs. This is necessary so that `biomod2` can *automaGically* arrange things in case some modeling technique has some particular data formatting needs: as an user, you want having just one dataset and let R fiddle with variations. ::: comment Read carefully in the `biomod2` manual how the base cose should go, have a look at the "Main functions" vignette [<http://uagra.uninsubria.it:8788/help/library/biomod2/doc/examples_1_mainFunctions.html>] ::: So far, we prepared the following data: - `ibex`: a `SpatialPointsDataFrame` containing presence points - `EGV_cropped`: a `raster:stack` containing the explanatory variables \### Generate Pseudo-Absence points. We actually need some *absence* points, or we can delegate to the various methods to generate "pseudo-absence" points. There are several methods to generate in advance pseudo-absences, and they should be used before coming to this point in the procedure. For now, we'll try having `biomod2` running with presence points solely.
+
+```{r prepare data}
+# response variable coordinates
+resp.xy <- coordinates(ibex)
+# response variable values at points defined by resp.xy in our case is a constant
+resp.values <- as.integer(rep(1, nrow(resp.xy)))
+24/05/23, 14:24 species_distribution · RStudio Server
+uagra.uninsubria.it:8788 4/6
+# let biomod2 tahe hold of the data...
+#ibexdata <- BIOMOD_FormatingData(resp.var = point_ibex$, resp.xy = point_ibex[, c("Lon",
+"Lat")],
+# expl.var = EGV2, resp.name = "Capra Ibex", PA.nb.rep = 2,
+# PA.nb.absences = 200, PA.strategy = "random")
+# alternative: PA.nb.absences = ceiling(length(resp.xy)*1.1)
+ibexdata <- BIOMOD_FormatingData(resp.name = "Capra ibex",
+resp.var = resp.values,
+expl.var = stack(EGV_cropped),
+resp.xy = resp.xy,
+filter.raster = TRUE,
+PA.nb.rep = 2,
+PA.nb.absences = ceiling(length(resp.xy)*1.1), # 10% more
+PA.strategy = "sre"
+)
+#Alternative: PA.nb.absences = 200,
+ibexdata
+```
+
+### Modeling Options
+
+Now I define the modeling options and run some of them: Generalized Linear Model, Gradient Boosting Model, Generative Additive Models, MAXENT and Random Forests.
+
+```{r define options}
+ibexopt <- BIOMOD_ModelingOptions(GLM = list(type = 'quadratic', interaction.level = 1),
+GBM = list(n.trees = 500),
+GAM = list(algo = 'GAM_mgcv'),
+RF = list(mtry=5),
+MAXENT = list(path_to_maxent.jar = '/usr/local/lib/R/site-library/dismo/java/maxent.jar'))
+```
+
+### Model selection
+
+Qui non gira! compare il seguente errore: " Error in `[<-(*tmp*, bm.format@PA.table[, pa], , value = sampled.mat)` : (subscript) logical subscript too long" Che prima non compariva, a prescindere da quali layer io selezioni.
+
+```{r run_0}
+ibexmodels <- BIOMOD_Modeling(bm.format = ibexdata,
+nb.cpu = 12,
+#models = c("GLM", "GBM", "RF", "GAM", "MAXENT"),
+models = c("RF", "GLM", "GBM"),
+bm.options = ibexopt,
+nb.rep = 2,
+metric.eval = c("KAPPA",'TSS','ROC'),
+data.split.perc = 80,
+var.import = 1,
+modeling.id = "demo1")
+```
+
+### Model Evaluation
+
+We also need model evaluation scores.
+
+```{r run_0}
+ibexmodeval <- get_evaluations(ibexmodels)
+dim(ibexmodeval)
+dimnames(ibexmodeval)
+```
+
+#### Model Evaluation Plots
+
+24/05/23, 14:24 species_distribution · RStudio Server uagra.uninsubria.it:8788 5/6 First we consider the method applied (default or "algo" setting).
+
+```{r}
+bm_PlotEvalMean(ibexmodels, group.by = "algo")
+```
+
+Then we consider group evaluation scores according to Pseudo-Absence Iteration.
+
+```{r}
+bm_PlotEvalMean(bm.out =ibexmodels, group.by = "PA")
+```
+
+Lastly we plot them according to the Cross-Validation run (two here).
+
+```{r}
+bm_PlotEvalMean(bm.out = ibexmodels, group.by = "run")
+```
+
+### Variable Importance
+
+```{r}
+ibex_varImp <- get_variables_importance(ibexmodels)
+apply(ibex_varImp, c(1,2), mean)
+```
+
+#### Variable Importance Plots
+
+```{r}
+bm_PlotVarImpBoxplot(bm.out = ibexmodels, group.by = c('expl.var', 'algo', 'algo'))
+```
+
+This step isn't necessary anymore as of the new version of Biomod2.
+
+```{r}
+#ibex_glm <- BIOMOD_LoadModels(bm.out = ibexmodels, algo='GLM')
+#ibex_gbm <- BIOMOD_LoadModels(bm.out = ibexmodels, algo='GBM')
+#ibex_rf <- BIOMOD_LoadModels(bm.out = ibexmodels, algo ='RF')
+#ibex_gam <- BIOMOD_LoadModels(ibexmodels, models='GAM')
+```
+
+#### Response Curves Plot
+
+How much of the response variable can be explained by each explanatory variable in percentage; the fixed metric chosen is median. We are considering all models, but we can also limit to some of them by setting a specific algo, PA or run.
+
+```{r}
+eval_strip <-
+bm_PlotResponseCurves(
+bm.out = ibexmodels,
+models.chosen = "all",
+#You can filter models; models.chosen = get_built_models= ibexmodels, algo/RUN = "_"
+show.variables= get_formal_data(ibexmodels,'expl.var.names'),
+do.bivariate = FALSE,
+fixed.var.metric = 'median',
+legend = FALSE)
+#display_title = FALSE,
+```
+
+#### Model Projections
+
+```{r}
+24/05/23, 14:24 species_distribution · RStudio Server
+uagra.uninsubria.it:8788 6/6
+ibexproj <- BIOMOD_Projection(bm.mod = ibexmodels,
+proj.name = 'Current',
+new.env = stack(EGV_cropped),
+models.chosen = 'all',
+metric.binary = 'all',
+metric.filter = 'all',
+build.clamping.mask = TRUE)
+ibexproj
+plot(ibexproj)
+```
+
+### Ensemble Models
+
+```{r}
+ibex_ensemble_models <-
+BIOMOD_EnsembleModeling(
+bm.mod = ibexmodels,
+em.by = 'all',
+metric.select = 'TSS',
+metric.select.thresh = 0.7,
+metric.eval = c('TSS','ROC'),
+prob.mean = TRUE,
+prob.cv = TRUE,
+committee.averaging = TRUE,
+prob.mean.weight = TRUE,
+var.import = 1)
+get_evaluations(ibex_ensemble_models)
+get_variables_importance(ibex_ensemble_models)
+```
+
+#### Ensemble Models Variable Importance
+
+```{r}
+bm_PlotVarImpBoxplot(bm.out = ibex_ensemble_models, group.by = c('expl.var', 'algo', 'algo'))
+```
+
+#### Ensemble Model Projection
+
+```{r}
+# Project ensemble models (building single projections)
+ibexEnsemble_proj <- BIOMOD_EnsembleForecasting(bm.em = ibex_ensemble_models,
+proj.name = 'Current EM',
+new.env = stack(EGV_cropped),
+models.chosen = 'all',
+metric.binary = 'all',
+metric.filter = 'all')
+ibexEnsemble_proj
+plot(ibexEnsemble_proj)
+```
+
+### \# Project onto future conditions
