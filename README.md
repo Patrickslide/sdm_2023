@@ -35,6 +35,7 @@ They were all produced by me using R and Python's plot functions and represent a
 
   ### :broom: factorial analyis  ###
   This are the results of the factorial analysis I performed to remove unnecessary and multicollinear variables for both scripts.
+  Two methods were implemented: VIF (Variance Inflaction Factor analysis) and Pearson's correlation, built as a matrix and represented as a Heatmap.
   
 ## :bookmark_tabs: resources     ##
 
