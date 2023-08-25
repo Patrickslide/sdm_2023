@@ -7,15 +7,12 @@ In this repository you will find some code revolving around producing statistica
 ## code       ##
 
 the *code* folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
-Here, the *species_distribution_model_Script_V1.Rmd* file represents a first run of SDM applied to Capra Ibex; 
+Here, the *sdm_ibex_data.Rmd* file represents a first run of SDM applied to Capra Ibex; 
 the script is divided in sections, with the following steps being mandatory:
   - Loading the __environmental variables__, joined in a **rasterStack** item and the __species presence records__, in **SpatialPointsDataFrame format**. In this case, we used two DataFrames of presence-only records of Capra Ibex and several species of Bats within the Alpine territory;
   - __BIOMOD_FormatingData__ --> used to format the loaded data to make it compatible with **biomod2** and, if necessary, generate pseudo-absence data to be used as training set. Four different selection strategies: disk, sre, random, user-defined; random was used for this script;
-  - **BIOMOD_Modeling** --> define all the algorithms to implement and their associated parameters; here, RF, GLM, GBM.
+  - **BIOMOD_Modeling** --> define all the algorithms to implement and their associated parameters; here, RF, GLM, MaxEnt, GBM.
   - **get_evaluations** --> used to perform the statistical analysis, applying the specified models to our compatible data.
-
-The script sdm_b_c.Rmd applies RF, GBM, GLM and MaxEnt to Capra Ibex and Bats data.
-The future conditions were taken from WorldClim, choosing scenario's SSP126 and SSP370 of the algorithm EC-Earth3-Veg, the best performing for simulation on European territory.
 
 From here, many information can be obtained to perform statistical analysis and distribution assessments: 
 - **Variable Importance** ranking with corresponding contribution for each factor.
@@ -25,11 +22,16 @@ From here, many information can be obtained to perform statistical analysis and 
 - **Ensemble Modeling**, joining all the results of the different algorithms to produce a more accurate prediction of distributions.
 - **Future Estimations**, if given the adequate settings concerning how the environment is expected to change.
 
+The future conditions were taken from WorldClim, choosing scenario's SSP126 and SSP370 of the algorithm EC-Earth3-Veg, the best performing for simulation on European territory.
+
+A second script named *sdm_multiple_species.Rmd* does the same tasks but working with more complex data, composed of multiple species of bats.
+
+
 ## pictures      ##
 
-This folder contains images which where produced using the models (outcome, references and much more).
-They were all produced by me, using R and Python's plot functions.
+This folder contains images which where produced using the models (outcome, references and much more) for bats belonging to the genus "Myotis", as demonstrated in *sdm_multiple_species.Rmd*.
 
+They were all produced by me using R and Python's plot functions and represent an example of the output you are expected to obtain. 
 
 
 ## resources     ##
