@@ -34,7 +34,7 @@ This folder contains images which where produced using the models (outcome, refe
 They were all produced by me using R and Python's plot functions and represent an example of the output you are expected to obtain. 
 
   ### :broom: factorial analyis  ###
-  This are the results of the factorial analysis I performed to remove unnecessary and multicollinear variables.
+  This are the results of the factorial analysis I performed to remove unnecessary and multicollinear variables for both scripts.
   
 ## :bookmark_tabs: resources     ##
 
