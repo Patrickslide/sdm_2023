@@ -13,15 +13,14 @@ the script is divided in sections, with the following steps being mandatory:
   - __BIOMOD_FormatingData__ --> used to format the loaded data to make it compatible with **biomod2** and, if necessary, generate pseudo-absence data to be used as training set. Four different selection strategies: disk, sre, random, user-defined; random was used for this script;
   - **BIOMOD_Modeling** --> define all the algorithms to implement and their associated parameters; here, RF, GLM, GBM.
   - **get_evaluations** --> used to perform the statistical analysis, applying the specified models to our compatible data.
-  
-  
-The script sdm_b_c.Rmd applies RF, GBM, GLM and MaxEnt to Capra Ibex and *BATS* data.
 
+The script sdm_b_c.Rmd applies RF, GBM, GLM and MaxEnt to Capra Ibex and Bats data.
+The future conditions were taken from WorldClim, choosing scenario's SSP126 and SSP370 of the algorithm EC-Earth3-Veg, the best performing for simulation on European territory.
 
-From here, many things can be computed and assessed: 
+From here, many information can be obtained to perform statistical analysis and distribution assessments: 
 - **Variable Importance** ranking with corresponding contribution for each factor.
 - **Model Evaluations**, based on statistics such as TSS, ROC curves or Cohen's KAPPA.
-- generate **Response Curves** for our factors.
+- **Response Curves** corresponding to each of our factors.
 - **Model projections**, seeing how close are the model's results with empirical distribution.
 - **Ensemble Modeling**, joining all the results of the different algorithms to produce a more accurate prediction of distributions.
 - **Future Estimations**, if given the adequate settings concerning how the environment is expected to change.
