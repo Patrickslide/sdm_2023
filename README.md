@@ -1,4 +1,4 @@
-:goat: :bat:Species Ditribution Models for Alps  Data <a name="TOP"> :mountain_snow:  </a>
+:goat: :bat:Species Distribution Models for Alps  Data <a name="TOP"> :mountain_snow:  </a>
 ===================
 In this repository you will find some code revolving around producing statistical models aimed at understanding what are the most important factors to predict animal distribution; the code is free to download but beware that, due to the large amount of data used, it is not advised to reproduce without proper instrumentation.
 https://github.com/Patrickslide/sdm_2023/blob/main/README.md
