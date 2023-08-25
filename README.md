@@ -1,7 +1,7 @@
 :goat: :bat:Species Ditribution Models for Alps  Data <a name="TOP"> :mountain_snow:  </a>
 ===================
 In this repository you will find some code revolving around producing statistical models aimed at understanding what are the most important factors to predict animal distribution; the code is free to download but beware that, due to the large amount of data used, it is not advised to reproduce without proper instrumentation.
-
+https://github.com/Patrickslide/sdm_2023/blob/main/README.md
 # :open_book: Contents:  #
 
 ##  :desktop_computer: code       ##
@@ -33,7 +33,9 @@ This folder contains images which where produced using the models (outcome, refe
 
 They were all produced by me using R and Python's plot functions and represent an example of the output you are expected to obtain. 
 
-
+  ### :broom: factorial analyis  ###
+  This are the results of the factorial analysis I performed to remove unnecessary and multicollinear variables.
+  
 ## :bookmark_tabs: resources     ##
 
 Notes, links and anything useful for these kind of scripts. Many more are available online of course, these are only few of those I documented myself with.
