@@ -7,7 +7,7 @@ In this repository you will find some code revolving around producing statistica
 ##  :desktop_computer: code       ##
 
 This folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
-Here, the *sdm_ibex_data.Rmd* file represents a first run of SDM applied to Capra Ibex; 
+Here, the **sdm_ibex_data.Rmd** file represents a first run of SDM applied to Capra Ibex; 
 the script is divided in sections, with the following steps being mandatory:
   - Loading the __environmental variables__, joined in a **rasterStack** item and the __species presence records__, in **SpatialPointsDataFrame format**. In this case, we used two DataFrames of presence-only records of Capra Ibex and several species of Bats within the Alpine territory;
   - __BIOMOD_FormatingData__ --> used to format the loaded data to make it compatible with **biomod2** and, if necessary, generate pseudo-absence data to be used as training set. Four different selection strategies: disk, sre, random, user-defined; random was used for this script;
@@ -24,7 +24,7 @@ From here, many information can be obtained to perform statistical analysis and 
 
 The future conditions were taken from WorldClim, choosing scenario's SSP126 and SSP370 of the algorithm EC-Earth3-Veg, the best performing for simulation on European territory.
 
-A second script named *sdm_multiple_species.Rmd* does the same tasks but working with more complex data, composed of multiple species of bats.
+A second script named **sdm_multiple_species.Rmd** does the same tasks but working with more complex data, composed of multiple species of bats.
 
 
 ## :camera_flash: pictures      ##
