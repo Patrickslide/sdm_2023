@@ -6,7 +6,7 @@ In this repository you will find some code revolving around producing statistica
 
 ## code       ##
 
-the *code* folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
+This folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
 Here, the *sdm_ibex_data.Rmd* file represents a first run of SDM applied to Capra Ibex; 
 the script is divided in sections, with the following steps being mandatory:
   - Loading the __environmental variables__, joined in a **rasterStack** item and the __species presence records__, in **SpatialPointsDataFrame format**. In this case, we used two DataFrames of presence-only records of Capra Ibex and several species of Bats within the Alpine territory;
