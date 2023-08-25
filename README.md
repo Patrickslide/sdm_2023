@@ -1,10 +1,10 @@
-Species Ditribution Models for Alps Data <a name="TOP"></a>
+:goat: :bat:Species Ditribution Models for Alps  Data <a name="TOP"> :mountain_snow:  </a>
 ===================
 In this repository you will find some code revolving around producing statistical models aimed at understanding what are the most important factors to predict animal distribution; the code is free to download but beware that, due to the large amount of data used, it is not advised to reproduce without proper instrumentation.
 
-# Contents:  #
+# :open_book: Contents:  #
 
-## code       ##
+##  :desktop_computer: code       ##
 
 This folder contains the scripts, written in R and Python languages at version 4.2 and 3.10.
 Here, the *sdm_ibex_data.Rmd* file represents a first run of SDM applied to Capra Ibex; 
@@ -27,17 +27,17 @@ The future conditions were taken from WorldClim, choosing scenario's SSP126 and 
 A second script named *sdm_multiple_species.Rmd* does the same tasks but working with more complex data, composed of multiple species of bats.
 
 
-## pictures      ##
+## :camera_flash: pictures      ##
 
 This folder contains images which where produced using the models (outcome, references and much more) for bats belonging to the genus "Myotis", as demonstrated in *sdm_multiple_species.Rmd*.
 
 They were all produced by me using R and Python's plot functions and represent an example of the output you are expected to obtain. 
 
 
-## resources     ##
+## :bookmark_tabs: resources     ##
 
 Notes, links and anything useful for these kind of scripts. Many more are available online of course, these are only few of those I documented myself with.
 
-  ### sdm references ###
+  ### :scroll: sdm references ###
 
 Here I uploaded all graphs, tables and diagrams found while documenting myself on SDMs, always quoting the source in the name in the format of (Surname, Year).
