@@ -36,7 +36,8 @@ They were all produced by me using R and Python's plot functions and represent a
 
 ## resources     ##
 
-Notes, links and anything useful for these kind of scripts.
+Notes, links and anything useful for these kind of scripts. Many more are available online of course, these are only few of those I documented myself with.
+
   ### sdm references ###
 
 Here I uploaded all graphs, tables and diagrams found while documenting myself on SDMs, always quoting the source in the name in the format of (Surname, Year).
