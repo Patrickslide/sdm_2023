@@ -44,3 +44,6 @@ Notes, links and anything useful for these kind of scripts. Many more are availa
   ### :scroll: sdm references ###
 
 Here I uploaded all graphs, tables and diagrams found while documenting myself on SDMs, always quoting the source in the name in the format of (Surname, Year).
+
+##  :national_park: ne_10m_urban:areas       ##
+A folder containing raster maps of my study area, used for plots seen in the final report.
